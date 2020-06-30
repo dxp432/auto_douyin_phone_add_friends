@@ -67,7 +67,6 @@ def matchImg_up_down(imgsrc, imgobj, my_img_height):
         cv2.imwrite('tmp_' + imgsrc, cropped)
         if ifmatchImgClick('tmp_' + imgsrc, imgobj):
             # print('找到了，' + str(step_y1))
-            matchImgClick('tmp_' + imgsrc, imgobj)
             if matchImg('tmp_' + imgsrc, imgobj) is not None:
                 # myx = str(matchImg('tmp_' + imgsrc, imgobj)['result'][0])
                 # myy = str(matchImg('tmp_' + imgsrc, imgobj)['result'][1])
