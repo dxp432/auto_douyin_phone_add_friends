@@ -56,6 +56,49 @@ import pyttsx3
 import comtypes.client
 import comtypes.client
 
+
+# my_img_height为小图片的高度，即为每次增加的像素,148
+# 1080* 2280
+def matchImg_up_down(imgsrc, imgobj, my_img_height):
+    img = cv2.imread(imgsrc)
+    y0, y1, x0, x1 = 0, 0, 0, 1080
+    for step_y1 in range(my_img_height, 2280, my_img_height):
+        cropped = img[y0:step_y1, x0:x1]  # 裁剪坐标为[y0:y1, x0:x1]
+        cv2.imwrite('tmp_' + imgsrc, cropped)
+        if ifmatchImgClick('tmp_' + imgsrc, imgobj):
+            # print('找到了，' + str(step_y1))
+            matchImgClick('tmp_' + imgsrc, imgobj)
+            if matchImg('tmp_' + imgsrc, imgobj) is not None:
+                # myx = str(matchImg('tmp_' + imgsrc, imgobj)['result'][0])
+                # myy = str(matchImg('tmp_' + imgsrc, imgobj)['result'][1])
+                # os.popen('adb -s 66819679 shell input tap ' + myx + ' ' + myy, 'r', 1)
+                # time.sleep(4)
+                myx = str(matchImg('tmp_' + imgsrc, imgobj)['result'][0])
+                myy = str(matchImg('tmp_' + imgsrc, imgobj)['result'][1])
+                myx_off = str(matchImg('tmp_' + imgsrc, imgobj)['result'][0] - 935 )
+                os.popen('adb -s 66819679 shell input tap ' + myx_off + ' ' + myy, 'r', 1)
+                time.sleep(4)
+            break
+        else:
+            pass
+
+
+# if对比图片并点击
+def ifmatchImgClick(myScreencap, mypng):
+    if matchImg(myScreencap, mypng) is not None:
+        print("！" + mypng + str(
+            matchImg(myScreencap, mypng)['result'][0]) + ',' + str(
+            matchImg(myScreencap, mypng)['result'][1]))
+        myx = str(matchImg(myScreencap, mypng)['result'][0])
+        myy = str(matchImg(myScreencap, mypng)['result'][1])
+        # click(int(float(myx)), int(float(myy)))
+        # print("-------------对比图片return True")
+        return True
+        # time.sleep(2)
+    else:
+        # print("-------------对比图片return False")
+        return False
+
 # 截图
 def screencap():
     time.sleep(1)
@@ -1085,6 +1128,43 @@ def back_control():
     os.popen('adb -s 66819679 shell input swipe 520 1100 520 300 ')
     time.sleep(2)
 
+def python_peple_add():
+    for my_loop_i in range(1, 200, 1):
+        print("滑动屏幕------------" + str(my_loop_i))
+        os.popen('adb -s 66819679 shell input swipe 520 1700 520 1550 ')
+        time.sleep(random.randint(2,3))
+        screencap()
+        matchImg_up_down('phoneScreencap.png', 'love.png', 140)
+        # if matchImg('phoneScreencap.png', 'love.png') is not None:
+        #     print("点击她的作品：" + str(
+        #         matchImg('phoneScreencap.png', 'love.png')['result'][0]) + ',' + str(
+        #         matchImg('phoneScreencap.png', 'love.png')['result'][1]))
+        #     myx = str(matchImg('phoneScreencap.png', 'love.png')['result'][0])
+        #     myy = str(matchImg('phoneScreencap.png', 'love.png')['result'][1])
+        #     myx_off = str(matchImg('phoneScreencap.png', 'love.png')['result'][0] - 935 )
+        #     os.popen('adb -s 66819679 shell input tap ' + myx_off + ' ' + myy, 'r', 1)
+        #     time.sleep(4)
+        #     # 如果有关注的按钮就点击
+        screencap()
+        if matchImg('phoneScreencap.png', 'add2.png') is not None:
+            print("add2" + str(
+                matchImg('phoneScreencap.png', 'add2.png')['result'][0]) + ',' + str(
+                matchImg('phoneScreencap.png', 'add2.png')['result'][1]))
+            myx = str(matchImg('phoneScreencap.png', 'add2.png')['result'][0])
+            myy = str(matchImg('phoneScreencap.png', 'add2.png')['result'][1])
+            os.popen('adb -s 66819679 shell input tap ' + myx + ' ' + myy, 'r', 1)
+            time.sleep(1)
+            # back 返回
+            print('back 返回')
+            os.popen('adb -s 66819679 shell input keyevent 4')
+            time.sleep(3)
+        elif matchImg('phoneScreencap.png', 'id.png') is not None:
+            print("id")
+            # back 返回
+            print('back 返回')
+            os.popen('adb -s 66819679 shell input keyevent 4')
+            time.sleep(3) 
+
 
 if __name__ == '__main__':
     # 定义鼠标键盘实例
@@ -1093,6 +1173,8 @@ if __name__ == '__main__':
 
     # add_love_comment()
     
-    add_quickly()
-    back_control()
-    love()
+    # add_quickly()
+    # back_control()
+    # love()
+    
+    python_peple_add()
