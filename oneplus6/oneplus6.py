@@ -1128,8 +1128,9 @@ def back_control():
     time.sleep(2)
 
 def python_peple_add():
-    for my_loop_i in range(1, 200, 1):
-        print("滑动屏幕------------" + str(my_loop_i))
+    for my_loop_i in range(1, 400, 1):
+        
+        print("滑动屏幕------------" + str(my_loop_i) +'   ' + str(datetime.datetime.now()))
         os.popen('adb -s 66819679 shell input swipe 520 1700 520 1550 ')
         time.sleep(random.randint(2,3))
         screencap()
@@ -1161,6 +1162,11 @@ def python_peple_add():
             print("id")
             # back 返回
             print('back 返回')
+            os.popen('adb -s 66819679 shell input keyevent 4')
+            time.sleep(3) 
+        elif matchImg('phoneScreencap.png', 'blank.png') is not None:
+            # back 返回
+            print('遇到其他情况，back 返回')
             os.popen('adb -s 66819679 shell input keyevent 4')
             time.sleep(3) 
 
