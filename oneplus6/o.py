@@ -74,9 +74,36 @@ def matchImg_up_down(imgsrc, imgobj, my_img_height):
                 # time.sleep(4)
                 myx = str(matchImg('tmp_' + imgsrc, imgobj)['result'][0])
                 myy = str(matchImg('tmp_' + imgsrc, imgobj)['result'][1])
-                myx_off = str(matchImg('tmp_' + imgsrc, imgobj)['result'][0] - 935 )
-                os.popen('adb -s 66819679 shell input tap ' + myx_off + ' ' + myy, 'r', 1)
+                # myx_off = str(matchImg('tmp_' + imgsrc, imgobj)['result'][0] - 935 )
+                os.popen('adb -s 66819679 shell input tap ' + myx + ' ' + myy, 'r', 1)
                 time.sleep(4)
+            break
+        else:
+            pass
+
+
+# my_img_height为小图片的高度，即为每次增加的像素,148
+# 1080* 2280
+def computer_matchImg_up_down(imgsrc, imgobj, my_img_height):
+    img = cv2.imread(imgsrc)
+    y0, y1, x0, x1 = 0, 0, 0, 1920
+    for step_y1 in range(my_img_height, 1080, my_img_height):
+        cropped = img[y0:step_y1, x0:x1]  # 裁剪坐标为[y0:y1, x0:x1]
+        cv2.imwrite('tmp_' + imgsrc, cropped)
+        if ifmatchImgClick('tmp_' + imgsrc, imgobj):
+            # print('找到了，' + str(step_y1))
+            if matchImg('tmp_' + imgsrc, imgobj) is not None:
+                # myx = str(matchImg('tmp_' + imgsrc, imgobj)['result'][0])
+                # myy = str(matchImg('tmp_' + imgsrc, imgobj)['result'][1])
+                # os.popen('adb -s 66819679 shell input tap ' + myx + ' ' + myy, 'r', 1)
+                # time.sleep(4)
+                myx = str(matchImg('tmp_' + imgsrc, imgobj)['result'][0])
+                myy = str(matchImg('tmp_' + imgsrc, imgobj)['result'][1])
+                myx_off = str(matchImg('tmp_' + imgsrc, imgobj)['result'][0] - 0 )
+                # os.popen('adb -s 66819679 shell input tap ' + myx_off + ' ' + myy, 'r', 1)
+                print(myx_off, myy)
+                click(int(float(myx_off)), int(float(myy)))
+                time.sleep(0.5)
             break
         else:
             pass
@@ -131,7 +158,7 @@ def click(x, y):
     ctypes.windll.user32.SetCursorPos(x, y)
     ctypes.windll.user32.mouse_event(2, 0, 0, 0, 0)
     ctypes.windll.user32.mouse_event(4, 0, 0, 0, 0)
-    time.sleep(3)
+    time.sleep(0.5)
 
 
 # 模拟键盘输入字符串
@@ -185,7 +212,7 @@ def matchImg(imgsrc, imgobj):  # imgsrc=原始图像，imgobj=待查找的图片
     imsrc = ac.imread(imgsrc)
     imobj = ac.imread(imgobj)
     match_result = ac.find_template(imsrc, imobj,
-                                    0.9)
+                                    0.97)
     # 0.9、confidence是精度，越小对比的精度就越低 {'confidence': 0.5435812473297119,
     # 'rectangle': ((394, 384), (394, 416), (450, 384), (450, 416)), 'result': (422.0, 400.alipay_leave0)}
     if match_result is not None:
@@ -883,50 +910,59 @@ def to_phone():
 def comment():
     print('---打开评论')
     os.popen('adb -s 66819679 shell input tap 992 1575')
-    time.sleep(4)
+    time.sleep(6)
 
     print('---点击空白框')
     os.popen('adb -s 66819679 shell input tap 108 2217')
-    time.sleep(4)
+    time.sleep(3)
 
-    os.popen('adb -s 66819679 shell input tap 632 1930')
+    os.popen('adb -s 66819679 shell input tap 623 1952')
     time.sleep(0.3)
-    os.popen('adb -s 66819679 shell input tap 700 1637')
+    os.popen('adb -s 66819679 shell input tap 707 1647')
     time.sleep(0.3)
-    os.popen('adb -s 66819679 shell input tap 415 1940')
+    os.popen('adb -s 66819679 shell input tap 431 1941')
     time.sleep(0.5)
-    os.popen('adb -s 66819679 shell input tap 700 1637')
+    os.popen('adb -s 66819679 shell input tap 707 1645')
     time.sleep(0.3)
-    os.popen('adb -s 66819679 shell input tap 916 1636')
+    os.popen('adb -s 66819679 shell input tap 925 1639')
     time.sleep(0.5)
-    os.popen('adb -s 66819679 shell input tap 592 2097')
+    os.popen('adb -s 66819679 shell input tap 585 2086')
     time.sleep(0.9)
 
     print('---点击icon')
-    for my_c in range(1,random.randint(5,15), 1):
+    for my_c in range(1,random.randint(2,15), 1):
 
-        os.popen('adb -s 66819679 shell input tap 60 1389')
+        os.popen('adb -s 66819679 shell input tap 76 1252')
         time.sleep(0.3)
 
-    for my_c in range(1,random.randint(5,15), 1):
-        os.popen('adb -s 66819679 shell input tap 200 1389')
+    for my_c in range(1,random.randint(2,15), 1):
+        os.popen('adb -s 66819679 shell input tap 199 1246')
         time.sleep(0.3)
     
     print('---点发送评论')
-    os.popen('adb -s 66819679 shell input tap 1000 1146')
+    os.popen('adb -s 66819679 shell input tap 1020 1017')
     time.sleep(3)
 
     print('---返回视频')
     os.popen('adb -s 66819679 shell input keyevent 4')
     time.sleep(2)
-
+    # # 如果没有退回到，就在返回一次
+    # screencap()
+    # if matchImg('phoneScreencap.png', 'add2.png') is not None:
+    #     print("add2" + str(
+    #         matchImg('phoneScreencap.png', 'add2.png')['result'][0]) + ',' + str(
+    #         matchImg('phoneScreencap.png', 'add2.png')['result'][1]))
+    #     myx = str(matchImg('phoneScreencap.png', 'add2.png')['result'][0])
+    #     myy = str(matchImg('phoneScreencap.png', 'add2.png')['result'][1])
+    #     os.popen('adb -s 66819679 shell input tap ' + myx + ' ' + myy, 'r', 1)
+    #     time.sleep(1)
 
 
 
 
 def add_love_comment():
 # 粉丝加关注
-    for my_index in range(1, 5000, 1):
+    for my_index in range(1, 300, 1):
         print("ooooo----------------" + str(my_index) + '    ' + str(datetime.datetime.now()))
         try:
             screencap()
@@ -939,37 +975,64 @@ def add_love_comment():
                     matchImg('phoneScreencap.png', 'add.png')['result'][1]))
                 myx = str(matchImg('phoneScreencap.png', 'add.png')['result'][0])
                 myy = str(matchImg('phoneScreencap.png', 'add.png')['result'][1])
-                myy_off = str(matchImg('phoneScreencap.png', 'add.png')['result'][1] + 62 )
-                print('点击手机')
                 os.popen('adb -s 66819679 shell input tap ' + myx + ' ' + myy, 'r', 1)
-                time.sleep(2)
-
+                time.sleep(1)
                 print('打开用户')
-                os.popen('adb -s 66819679 shell input tap ' + myx + ' ' + myy_off, 'r', 1)
+                os.popen('adb -s 66819679 shell input tap 557 459', 'r', 1)
                 time.sleep(random.randint(5,6))
 
-            elif matchImg('phoneScreencap.png', 'add1.png') is not None:
-                print("add1" + str(
-                    matchImg('phoneScreencap.png', 'add1.png')['result'][0]) + ',' + str(
-                    matchImg('phoneScreencap.png', 'add1.png')['result'][1]))
-                myx = str(matchImg('phoneScreencap.png', 'add1.png')['result'][0])
-                myy = str(matchImg('phoneScreencap.png', 'add1.png')['result'][1])
-                myy_off = str(matchImg('phoneScreencap.png', 'add1.png')['result'][1] + 62 )
-                print('点击手机')
-                os.popen('adb -s 66819679 shell input tap ' + myx + ' ' + myy, 'r', 1)
-                time.sleep(2)
+                # # 加好友
+                # screencap()
+                # if matchImg('phoneScreencap.png', 'add2.png') is not None:
+                #     print("add2" + str(
+                #         matchImg('phoneScreencap.png', 'add2.png')['result'][0]) + ',' + str(
+                #         matchImg('phoneScreencap.png', 'add2.png')['result'][1]))
+                #     myx = str(matchImg('phoneScreencap.png', 'add2.png')['result'][0])
+                #     myy = str(matchImg('phoneScreencap.png', 'add2.png')['result'][1])
+                #     os.popen('adb -s 66819679 shell input tap ' + myx + ' ' + myy, 'r', 1)
+                #     time.sleep(1)
+                # screencap()
+                # if matchImg('phoneScreencap.png', 'add.png') is not None or matchImg('phoneScreencap.png', 'add1.png') is not None:
+                #     print("add" + str(
+                #         matchImg('phoneScreencap.png', 'add.png')['result'][0]) + ',' + str(
+                #         matchImg('phoneScreencap.png', 'add.png')['result'][1]))
+                # else:
+                #     os.popen('adb -s 66819679 shell input keyevent 4')
+                #     time.sleep(2)
 
-                print('打开用户')
-                os.popen('adb -s 66819679 shell input tap ' + myx + ' ' + myy_off, 'r', 1)
-                time.sleep(random.randint(4,5))
+                # myx = str(matchImg('phoneScreencap.png', 'add.png')['result'][0])
+                # myy = str(matchImg('phoneScreencap.png', 'add.png')['result'][1])
+                # # myy_off = str(matchImg('phoneScreencap.png', 'add.png')['result'][1] + 62 )
+                # print('点击手机')
+                # os.popen('adb -s 66819679 shell input tap ' + myx + ' ' + myy, 'r', 1)
+                # time.sleep(2)
+
+                # print('打开用户')
+                # os.popen('adb -s 66819679 shell input tap ' + myx + ' ' + myy_off, 'r', 1)
+                # time.sleep(random.randint(5,6))
+
+            # elif matchImg('phoneScreencap.png', 'add1.png') is not None:
+            #     print("add1" + str(
+            #         matchImg('phoneScreencap.png', 'add1.png')['result'][0]) + ',' + str(
+            #         matchImg('phoneScreencap.png', 'add1.png')['result'][1]))
+            #     myx = str(matchImg('phoneScreencap.png', 'add1.png')['result'][0])
+            #     myy = str(matchImg('phoneScreencap.png', 'add1.png')['result'][1])
+            #     myy_off = str(matchImg('phoneScreencap.png', 'add1.png')['result'][1] + 62 )
+            #     print('点击手机')
+            #     os.popen('adb -s 66819679 shell input tap ' + myx + ' ' + myy, 'r', 1)
+            #     time.sleep(2)
+
+            #     print('打开用户')
+            #     os.popen('adb -s 66819679 shell input tap ' + myx + ' ' + myy_off, 'r', 1)
+            #     time.sleep(random.randint(4,5))
 
             screencap()
             if matchImg('phoneScreencap.png', 'videoisempty.png') is not None or matchImg('phoneScreencap.png', 'pri.png') is not None or matchImg('phoneScreencap.png', 'music.png') is not None:
-                print("没有作品")
-                print('---返回用户列表')
+                print("没有作品---返回用户列")
                 os.popen('adb -s 66819679 shell input keyevent 4')
                 time.sleep(2)
             else:
+                
                 if matchImg('phoneScreencap.png', 'video.png') is not None:
                     print("点击她的作品：" + str(
                         matchImg('phoneScreencap.png', 'video.png')['result'][0]) + ',' + str(
@@ -986,23 +1049,28 @@ def add_love_comment():
 
                 # 随机评论
                 # if random.choice([True, False]):
-                comment()
+                # comment()
+
 
                 print('---返回用户列表')
                 os.popen('adb -s 66819679 shell input keyevent 4')
                 time.sleep(3)
-                screencap()
-                if matchImg('phoneScreencap.png', 'add.png') is not None or matchImg('phoneScreencap.png', 'add1.png') is not None:
-                    print("add" + str(
-                        matchImg('phoneScreencap.png', 'add.png')['result'][0]) + ',' + str(
-                        matchImg('phoneScreencap.png', 'add.png')['result'][1]))
-                else:
-                    os.popen('adb -s 66819679 shell input keyevent 4')
-                    time.sleep(2)
+                os.popen('adb -s 66819679 shell input keyevent 4')
+                time.sleep(3)
 
+                
+
+
+            # 滑动屏幕down
+            os.popen('adb -s 66819679 shell input swipe 520 600 520 1500 ')
+            time.sleep(2)
+            # 滑动屏幕up
+            os.popen('adb -s 66819679 shell input swipe 520 1500 520 600 ')
+            time.sleep(2)
             # 滑动屏幕
-            os.popen('adb -s 66819679 shell input swipe 520 1000 520 700 ')
+            os.popen('adb -s 66819679 shell input swipe 520 1000 520 730 ')
             time.sleep(random.randint(2,3))
+
 
 
         except Exception as e:
@@ -1012,10 +1080,13 @@ def add_love_comment():
 
 def love():
     # 粉丝加关注
-    for my_index in range(1, 150, 1):
+    for my_index in range(1, 100, 1):
         print("ooooo----------------" + str(my_index) + '    ' + str(datetime.datetime.now()))
         try:
             print("滑动屏幕")
+            print("左滑动屏幕")
+            os.popen('adb -s 66819679 shell input swipe 20 1000 1000 1000 ')
+            time.sleep(random.randint(2,3))
             os.popen('adb -s 66819679 shell input swipe 520 1000 520 300 ')
             time.sleep(random.randint(2,3))
             screencap()
@@ -1041,8 +1112,10 @@ def love():
                 time.sleep(random.randint(2,3)) 
             else:
                 # 点赞
+                print('点赞')
                 os.popen('adb -s 66819679 shell input tap 988 1381')
                 time.sleep(random.randint(1,2))
+                comment()
 
         except Exception as e:
             print(e)
@@ -1093,7 +1166,7 @@ def matchImg_delete2Continue(myScreencap, mypng):
 
 def add_quickly():
  # 粉丝加关注
-    for my_index in range(1, 30, 1):
+    for my_index in range(1, 200, 1):
         print("ooooo--------ooooooo-----" + str(my_index) + '    ' + str(datetime.datetime.now()))
         try:
 
@@ -1127,14 +1200,15 @@ def back_control():
     os.popen('adb -s 66819679 shell input swipe 520 1100 520 300 ')
     time.sleep(2)
 
+
 def python_peple_add():
     for my_loop_i in range(1, 400, 1):
         
         print("滑动屏幕------------" + str(my_loop_i) +'   ' + str(datetime.datetime.now()))
         os.popen('adb -s 66819679 shell input swipe 520 1700 520 1550 ')
         time.sleep(random.randint(2,3))
-        screencap()
-        matchImg_up_down('phoneScreencap.png', 'love.png', 140)
+        # screencap()
+        # matchImg_up_down('phoneScreencap.png', 'love.png', 140)
         # if matchImg('phoneScreencap.png', 'love.png') is not None:
         #     print("点击她的作品：" + str(
         #         matchImg('phoneScreencap.png', 'love.png')['result'][0]) + ',' + str(
@@ -1166,9 +1240,104 @@ def python_peple_add():
             time.sleep(3) 
         elif matchImg('phoneScreencap.png', 'blank.png') is not None:
             # back 返回
-            print('遇到其他情况，back 返回')
+            print('遇到网络不好的情况，back 返回')
             os.popen('adb -s 66819679 shell input keyevent 4')
             time.sleep(3) 
+
+# 用来取消好友
+def unadd():
+    for my_b in range(400):
+        print("滑到最底部-----" + str(my_b) + '    ' + str(datetime.datetime.now()))
+         # 滑动屏幕
+        os.popen('adb -s 66819679 shell input swipe 520 1100 520 300 ')
+        time.sleep(0.7)
+        if my_b % 50 == 0:
+            print('滑动屏幕向上一次--------------------------------------------------------------------------------------------')
+            time.sleep(1)
+            os.popen('adb -s 66819679 shell input swipe 520 500 520 900 ')
+            time.sleep(1)
+
+    for my_index in range(1, 400, 1):
+        print("取消关注-----------------------" + str(my_index) + '    ' + str(datetime.datetime.now()))
+        try:
+
+            screencap()
+            while matchImg_delete2Continue('phoneScreencap.png', 'unadd.png'):
+                # print('while')
+                time.sleep(0.5)
+            # print('end while')
+            print("滑动屏幕")
+            #  # 滑动屏幕down
+            # os.popen('adb -s 66819679 shell input swipe 520 600 520 1500 ')
+            # time.sleep(2)
+            # # 滑动屏幕up
+            # os.popen('adb -s 66819679 shell input swipe 520 1500 520 500 ')
+            # time.sleep(2)
+            # 滑动屏幕
+            os.popen('adb -s 66819679 shell input swipe 520 500 520 1400 ')
+            # os.popen('adb -s 66819679 shell input swipe 520 1100 520 250 ')
+            time.sleep(3)
+        except Exception as e:
+            print(e)
+            time.sleep(9)
+
+
+
+    # for my_loop_i in range(1, 400, 1):
+                # print("滑动屏幕------------" + str(my_loop_i) +'   ' + str(datetime.datetime.now()))
+        # os.popen('adb -s 66819679 shell input swipe 520 1700 520 1550 ')
+        # time.sleep(random.randint(1,2))
+        # screencap()
+        # matchImg_up_down('phoneScreencap.png', 'unadd.png', 140)
+
+
+
+
+
+    # for my_index_i_unadd in range(1, 100, 1):
+    #     print('上划/下一个好友------------------' + str(my_index_i_unadd))
+    #     os.popen('adb -s 66819679 shell input swipe 491 2067 491 520')
+    #     time.sleep(0.5)
+
+    # for my_index_i_unadd in range(1, 4000, 1):
+    #     print('上划/下一个好友------------------' + str(my_index_i_unadd))
+    #     os.popen('adb -s 66819679 shell input swipe 491 500 491 696')
+    #     time.sleep(1)
+
+    #     print('点击用户')
+    #     os.popen('adb -s 66819679 shell input tap 621 522', 'r', 1)
+    #     time.sleep(4)
+
+    #     # print('点击小图标向下')
+    #     # os.popen('adb -s 66819679 shell input tap 976 509', 'r', 1)
+    #     # time.sleep(3)
+
+    #     print('点击取消互相关注')
+    #     os.popen('adb -s 66819679 shell input tap 559 510', 'r', 1)
+    #     time.sleep(2)
+
+    #     print('点击取消互相关注--确认')
+    #     os.popen('adb -s 66819679 shell input tap 708 1293', 'r', 1)
+    #     time.sleep(2)
+
+    #     print('返回')
+    #     os.popen('adb -s 66819679 shell input keyevent 4')
+    #     time.sleep(2) 
+
+
+def computer_bilibili_love():
+    for my_index_i in range(1, 500, 1):
+        print('------------------' + str(my_index_i))
+        PrtSc("Screencap.png")
+        computer_matchImg_up_down('Screencap.png', 'bilibili_love.png', 50)
+        time.sleep(0.5)
+        if my_index_i % 10 == 0:
+            computer_matchImg_up_down('Screencap.png', 'bilibili_next.png', 100)
+            time.sleep(4)
+            # 电脑翻页
+            KEY(34)
+            time.sleep(0.5)
+        
 
 
 if __name__ == '__main__':
@@ -1176,10 +1345,14 @@ if __name__ == '__main__':
     k = PyKeyboard()
     m = PyMouse()
 
+    # 加好友
+    add_quickly()
+    # comment()
     # add_love_comment()
     
-    # add_quickly()
+    # unadd()
+    
     # back_control()
     # love()
     
-    python_peple_add()
+    # python_peple_add()
